@@ -1,0 +1,59 @@
+package com.ddmu.journal.util;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+
+@Component
+public class JwtUtil {
+
+    private static final String SECRET_KEY = "DXC*RJ$R&)ED#723h2db8od4c6^B*(D$C%^&YBUIOv678r2z%V&*rc6767C*R789&*c678^giGUUIC7u8ctv&UY";
+
+    private static final int TOKEN_VALIDITY = 3600 * 24;
+    public String getUserNameFromToken(String token){
+        return getClaimFromToken(token, Claims::getSubject);
+    }
+
+    public boolean validateToken(String token, UserDetails userDetails){
+        String userName = getUserNameFromToken(token);
+         return ( userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    public String generateToken(UserDetails userDetails){
+        Map<String, Object> claims = new HashMap<>();
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY * 1000))
+                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                .compact()
+                ;
+    }
+
+    private <T> T getClaimFromToken(String token, Function<Claims, T> claimResolver){
+        final Claims claims = getAllClaimsFromToken(token);
+        return claimResolver.apply(claims);
+    }
+
+    private Claims getAllClaimsFromToken(String token){
+        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+    }
+
+    private boolean isTokenExpired(String token){
+        final Date expirationDate = getExpirationFromToken(token);
+        return expirationDate.before(new Date());
+    }
+
+    private Date getExpirationFromToken(String token){
+        return getClaimFromToken(token, Claims::getExpiration);
+    }
+
+}
