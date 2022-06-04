@@ -15,13 +15,13 @@ import java.util.List;
 @Repository
 public interface JournalRepository extends JpaRepository<Journal, Long> {
 
-    @Query(value="SELECT * FROM journal WHERE journal.id COLLATE utf8mb4_unicode_ci =  :id", nativeQuery = true)
+    @Query(value="SELECT * FROM journal WHERE journal.id = :id", nativeQuery = true)
     Journal getById(@Param("id") Long id);
 
-    @Query(value = "SELECT COUNT(*) FROM journal INNER JOIN journal_status ON journal.journal_status_id = journal_status.id WHERE journal_status.value COLLATE utf8mb4_unicode_ci = :journal_status", nativeQuery = true)
+    @Query(value = "SELECT COUNT(*) FROM journal INNER JOIN journal_status ON journal.journal_status_id = journal_status.id WHERE journal_status.value = :journal_status", nativeQuery = true)
     long countJournalsByStatus(@Param("journal_status") String journalStatus);
 
-    @Query(value = "SELECT * FROM journal INNER JOIN journal_status ON journal.journal_status_id =  journal_status.id WHERE journal_status.value IN (:filter) ORDER BY journal.date_publication DESC, journal.time_publication DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM journal INNER JOIN journal_status ON journal.journal_status_id = journal_status.id WHERE journal_status.value IN (:filter) ORDER BY journal.date_publication DESC, journal.time_publication DESC", nativeQuery = true)
     Page<Journal> findNewestJournalsByDateTimeOnPage(Pageable pageable, @Param("filter") List<String> filter);
 
     @Query(value = "SELECT * FROM journal INNER JOIN doctor ON journal.doctor_id = doctor.id INNER JOIN journal_status ON journal.journal_status_id = journal_status.id WHERE doctor.email IN (:emails) AND journal_status.value IN (:filter) ORDER BY journal.date_publication DESC, journal.time_publication DESC", nativeQuery = true)

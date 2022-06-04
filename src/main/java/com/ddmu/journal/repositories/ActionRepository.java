@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ActionRepository extends JpaRepository<Action, Long> {
 
-    @Query(value = "SELECT * FROM action WHERE action.value COLLATE utf8mb4_unicode_ci = :value", nativeQuery = true)
+    @Query(value = "SELECT * FROM action WHERE action.value = :value", nativeQuery = true)
     Action findByValue(@Param("value") String value);
 
 }

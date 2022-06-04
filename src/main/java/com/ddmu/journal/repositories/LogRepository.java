@@ -15,6 +15,6 @@ public interface LogRepository extends JpaRepository<Log, Long> {
     @Query(value = "SELECT * FROM log ORDER BY log.date DESC, log.time DESC", nativeQuery = true)
     Page<Log> getLogsByPage(Pageable pageable);
 
-    @Query(value = "SELECT * FROM log INNER JOIN user ON log.user_id = user.id INNER JOIN doctor ON user.doctor_id =  doctor.id WHERE doctor.email IN (:emails) ORDER BY log.date DESC, log.time DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM log INNER JOIN user ON log.user_id = user.id INNER JOIN doctor ON user.doctor_id = doctor.id WHERE doctor.email IN (:emails) ORDER BY log.date DESC, log.time DESC", nativeQuery = true)
     Page<Log> getLogsByUsersOnPage(Pageable pageable, @Param("emails") List<String> emails);
 }
