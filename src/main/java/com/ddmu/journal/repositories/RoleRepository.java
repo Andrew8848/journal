@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
-    @Query(value = "SELECT * FROM role WHERE role.value = :value", nativeQuery = true)
+    @Query(value = "SELECT * FROM role WHERE role.value COLLATE utf8mb4_unicode_ci = :value", nativeQuery = true)
     Role findByValue(@Param("value") String value);
 
 }

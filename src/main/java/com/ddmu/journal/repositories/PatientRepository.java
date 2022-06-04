@@ -11,7 +11,7 @@ import java.sql.Date;
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Long> {
 
-    @Query(value = "SELECT * FROM patient WHERE name = :name AND surname = :surname AND date_of_birth = :dateOfBirth", nativeQuery = true)
+    @Query(value = "SELECT * FROM patient WHERE name COLLATE utf8mb4_unicode_ci =  :name AND surname COLLATE utf8mb4_unicode_ci =  :surname AND date_of_birth = :dateOfBirth", nativeQuery = true)
     public Patient findByNameAndSurname(@Param("name") String name, @Param("surname") String surname, @Param("dateOfBirth")Date dateOfBirth);
 
 }

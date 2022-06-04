@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PrivilegeRepository extends JpaRepository<Privilege, Long> {
-    @Query(value = "SELECT * FROM privilege WHERE privilege.value = :value", nativeQuery = true)
+    @Query(value = "SELECT * FROM privilege WHERE privilege.value COLLATE utf8mb4_unicode_ci = :value", nativeQuery = true)
     Privilege findByValue(@Param("value") String value);
 
 }
